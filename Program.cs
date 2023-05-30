@@ -1,19 +1,21 @@
 ﻿using System.Diagnostics;
 
-
 class Program
 {
     static void Main(string[] args)
     {
-        // Comprueba que se haya proporcionado la ruta del archivo de origen
+        string sourcePath = "";
+        string volume = "2.0";  // Volumen por defecto
+
         if (args.Length < 1)
         {
-            Console.WriteLine("Por favor, proporciona la ruta del archivo de origen.");
-            return;
+            Console.Write("Por favor, proporciona la ruta del archivo de origen: ");
+            sourcePath = Console.ReadLine();
         }
-
-        string sourcePath = args[0];
-        string volume = "2.0";  // Volumen por defecto
+        else
+        {
+            sourcePath = args[0];
+        }
 
         // Verifica si el archivo de origen existe
         if (!File.Exists(sourcePath))
@@ -26,6 +28,16 @@ class Program
         if (args.Length >= 2)
         {
             volume = args[1];
+        }
+        else
+        {
+            Console.Write("Por favor, proporciona el valor de volumen (2.0 es el valor por defecto): ");
+            string inputVolume = Console.ReadLine();
+
+            if (!string.IsNullOrEmpty(inputVolume))
+            {
+                volume = inputVolume;
+            }
         }
 
         string destPath = "";
@@ -64,6 +76,9 @@ class Program
             process.StartInfo.RedirectStandardOutput = true;
             process.Start();
 
+            // Muestra un mensaje de que se esta realizando el aumento de volumen
+            Console.WriteLine("Aumentando el volumen...");
+
             // Leer la salida del proceso
             while (!process.StandardOutput.EndOfStream)
             {
@@ -72,6 +87,9 @@ class Program
             }
 
             process.WaitForExit();
+
+            // Muestra un mensaje cuando el proceso ha finalizado
+            Console.WriteLine("El proceso de ffmpeg ha finalizado exitosamente.");
         }
         catch (Exception ex)
         {
