@@ -65,8 +65,22 @@ class Program
 
         try
         {
-            // Define el comando ffmpeg y los parámetros necesarios para aumentar el volumen.
-            string arguments = $"-i \"{sourcePath}\" -vcodec copy -scodec copy -filter:a \"volume={volume}\" \"{destPath}\"";
+            /// Define el comando ffmpeg y los parámetros necesarios para aumentar el volumen.
+            // Cada opción se explica a continuación:
+
+            // -i \"{sourcePath}\": Especifica el archivo de entrada, en este caso, sourcePath.
+
+            // -vcodec copy: Copia el codec de video del archivo de entrada al archivo de salida sin realizar ninguna codificación.
+            // Este proceso es más rápido y no reduce la calidad del video, pero no todos los formatos y codecs son compatibles con la copia directa.
+
+            // -scodec copy: Al igual que -vcodec, -scodec copia el codec de los subtítulos del archivo de entrada al archivo de salida sin codificar.
+
+            // -filter:a \"volume={volume}\": Aplica un filtro al audio para cambiar su volumen. El valor que especificamos será el nuevo volumen del audio en el archivo de salida.
+
+            // -map 0: Copia todos los streams (pistas de audio, video y subtítulos) del archivo de entrada al archivo de salida. Esto asegura que todas las pistas de subtítulos serán conservadas.
+
+            // \"{destPath}\": Especifica el archivo de salida, en este caso, destPath.
+            string arguments = $"-i \"{sourcePath}\" -vcodec copy -scodec copy -filter:a \"volume={volume}\" -map 0 \"{destPath}\"";
 
             Process process = new Process();
             process.StartInfo.FileName = "ffmpeg";
